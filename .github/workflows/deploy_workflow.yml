@@ -10,4 +10,4 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: build
-          run: echo $API_TOKEN
+          run: ls && pwd
