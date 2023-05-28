@@ -5,7 +5,6 @@ class Node:
 
 
 class Trie:
-
     def __init__(self):
         self.root = Node()
 
@@ -55,7 +54,7 @@ def proceed(deck, current_prefix, row, col, parent_trie):
     char = deck[row][col]
     word_flag = parent_trie.search(current_prefix)
 
-    
+
     # trie = parent_trie.root.children[char]
 
 

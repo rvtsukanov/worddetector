@@ -5,9 +5,8 @@ on:
 
 jobs:
   lint:
+      uses: actions/test@v2
       env:
         API_TOKEN: ${{secrets.API_TOKEN}}
+
       runs-on: ubuntu-latest
-      steps:
-        - name: build
-          run: ls && pwd
