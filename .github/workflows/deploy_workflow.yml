@@ -1,0 +1,8 @@
+name: deploy_workflow
+
+jobs:
+  lint:
+      runs-on: ubuntu-latest
+      steps:
+        - name: build
+          run: docker build .
