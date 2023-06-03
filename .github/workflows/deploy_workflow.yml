@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Building Image
+    name: Testing
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -15,4 +15,4 @@ jobs:
         run: docker build --tag test_image .
 
       - name: Test
-        run:  docker run -it test_image /usr/local/bin/python -m pytest
+        run:  docker run test_image /usr/local/bin/python -m pytest
