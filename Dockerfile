@@ -22,6 +22,6 @@ RUN poetry config virtualenvs.create false
 RUN poetry install
 
 # Runnning tests
-CMD ["pytest"]
+#CMD ["pytest"]
 
 

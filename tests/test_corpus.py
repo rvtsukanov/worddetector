@@ -4,7 +4,7 @@ import pytest
 @pytest.fixture
 def words_list():
     words = []
-    with open('../corpus/normalized_corpus_rus.txt', 'r') as f:
+    with open('./corpus/normalized_corpus_rus.txt', 'r') as f:
         for line in f.readlines():
             words.append(line.strip())
     return words

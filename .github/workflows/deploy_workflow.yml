@@ -4,9 +4,13 @@ on:
     branches: ["master"]
 
 jobs:
-  lint:
-      uses: actions/test@v2
-      env:
-        API_TOKEN: ${{secrets.API_TOKEN}}
+  build:
+    runs-on: ubuntu-latest
+    name: Building Image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        run: docker build --tag test_image .
 
-      runs-on: ubuntu-latest
+      - name: Test
+        run:  docker run -it test_image /usr/local/bin/python -m pytest
