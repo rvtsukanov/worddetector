@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Build
         run: docker build --tag test_image .
 
       - name: Test
