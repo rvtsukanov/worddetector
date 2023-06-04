@@ -11,23 +11,20 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v3
 
-#            - name: Build
-#              env:
-#                  CR_REGISTRY: crp5td2ej9d9m9e880v2
-#                  CR_REPOSITORY: tesser
-#                  IMAGE_TAG: ${{ github.sha }}
-#              run: docker build --tag cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-#
-#            - name: Test
-#              env:
-##                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
-##                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
-##                  IMAGE_TAG: ${{ github.sha }}
-#                  CR_REGISTRY: crp5td2ej9d9m9e880v2
-#                  CR_REPOSITORY: tesser
-#                  IMAGE_TAG: ${{ github.sha }}
-#
-#              run:  docker run cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG /usr/local/bin/python -m pytest
+            - name: Build
+              env:
+                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+                  IMAGE_TAG: ${{ github.sha }}
+              run: docker build --tag cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+
+            - name: Test
+              env:
+                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+                  IMAGE_TAG: ${{ github.sha }}
+
+              run:  docker run cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG /usr/local/bin/python -m pytest
 
 
             - name: Login to Yandex Cloud Container Registry
@@ -41,25 +38,22 @@ jobs:
                   CR_REGISTRY: crp5td2ej9d9m9e880v2
                   CR_REPOSITORY: tesser
                   IMAGE_TAG: ${{ github.sha }}
-#              run: docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
               run: |
                   docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
                   docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+                
+            - name: Deploy Serverless Container
+              id: deploy-sls-container
+              uses: yc-actions/yc-sls-container-deploy@v2
+              with:
+                yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+                container-name: worddetector-test
+                folder-id: ${{ secrets.FOLDER_ID }}
+                revision-service-account-id: ${{ secrets.SERVICE_ACCOUNT_ID }}
+                revision-cores: 1
+                revision-memory: 512Mb
+                revision-core-fraction: 100
+                revision-concurrency: 8
+                revision-image-url: cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+                revision-execution-timeout: 10
 
-
-
-#      - name: Deploy COI YC
-#        uses: yc-actions/yc-coi-deploy@v1.0.1
-#        with:
-#          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-##          folder-id: ${{ secrets.YC_FOLDER_ID }}
-#          VM-name: test_coi
-##          vm-service-account-id: ${{ secrets.YC_SERVICE_ACCOUNT_ID }}
-#          vm-cores: 1
-#          vm-platform-id: 'standard-v2'
-#          vm-memory: 512Mb
-#          vm-disk-size: 30Gb
-#          vm-core-fraction: 5
-##          vm-subnet-id: ${{ secrets.YC_SUBNET_ID }}
-##          docker-compose-path: './yandex-cloud/docker-compose.yc.yaml'
-##          user-data-path: './yandex-cloud/user-data.yaml'
