@@ -15,21 +15,20 @@ jobs:
               env:
                   CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
                   CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
-                  IMAGE_TAG: latest
+                  IMAGE_TAG: ${{ github.sha }}
               run: docker build --tag cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
 
             - name: Test
               env:
                   CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
                   CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
-                  IMAGE_TAG: latest
+                  IMAGE_TAG: ${{ github.sha }}
               run:  docker run cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG /usr/local/bin/python -m pytest
 
 
             - name: Login to Yandex Cloud Container Registry
               id: login-cr
-              uses: yc-actions/yc-cr-login@v0.1-alpha
-      #        uses: yc-actions/yc-cr-login@v1
+              uses: yc-actions/yc-cr-login@v1
               with:
                   yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
@@ -37,10 +36,8 @@ jobs:
               env:
                   CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
                   CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
-                  IMAGE_TAG: latest
-#              with:
-#                yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-              run: yc iam key create --service-account-name default-sa -o key.json && cat key.json | docker login --username json_key --password-stdin cr.yandex && docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+                  IMAGE_TAG: ${{ github.sha }}
+              run: docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
 
 #      - name: Deploy COI YC
