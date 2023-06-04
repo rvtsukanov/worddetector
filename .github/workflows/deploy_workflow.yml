@@ -13,16 +13,20 @@ jobs:
 
             - name: Build
               env:
-                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
-                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+                  CR_REGISTRY: crp5td2ej9d9m9e880v2
+                  CR_REPOSITORY: tesser
                   IMAGE_TAG: ${{ github.sha }}
               run: docker build --tag cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
 
             - name: Test
               env:
-                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
-                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+#                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+#                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+#                  IMAGE_TAG: ${{ github.sha }}
+                  CR_REGISTRY: crp5td2ej9d9m9e880v2
+                  CR_REPOSITORY: tesser
                   IMAGE_TAG: ${{ github.sha }}
+
               run:  docker run cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG /usr/local/bin/python -m pytest
 
 
@@ -34,8 +38,8 @@ jobs:
 
             - name: Push Image To YC
               env:
-                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
-                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+                  CR_REGISTRY: crp5td2ej9d9m9e880v2
+                  CR_REPOSITORY: tesser
                   IMAGE_TAG: ${{ github.sha }}
               run: docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
