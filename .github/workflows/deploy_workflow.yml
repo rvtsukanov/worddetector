@@ -4,40 +4,41 @@ on:
     branches: ["master"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    name: Testing
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    build:
+        runs-on: ubuntu-latest
+        name: Testing
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
 
-      - name: Build
-        env:
-          CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
-          CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
-          IMAGE_TAG: latest
-        run: docker build --tag cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+            - name: Build
+              env:
+                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+                  IMAGE_TAG: latest
+              run: docker build --tag cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
 
-      - name: Test
-        env:
-          CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
-          CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
-          IMAGE_TAG: latest
-        run:  docker run cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG /usr/local/bin/python -m pytest
+            - name: Test
+              env:
+                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+                  IMAGE_TAG: latest
+              run:  docker run cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG /usr/local/bin/python -m pytest
 
 
-      - name: Login to Yandex Cloud Container Registry
-        id: login-cr
-        uses: yc-actions/yc-cr-login@v1
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+            - name: Login to Yandex Cloud Container Registry
+              id: login-cr
+              uses: yc-actions/yc-cr-login@v0.1-alpha
+      #        uses: yc-actions/yc-cr-login@v1
+              with:
+                  yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
-      - name: Push Image To YC
-        env:
-          CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
-          CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
-          IMAGE_TAG: latest
-        run: docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+            - name: Push Image To YC
+              env:
+                  CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+                  CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
+                  IMAGE_TAG: latest
+              run: docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
 
 #      - name: Deploy COI YC
