@@ -57,18 +57,21 @@ jobs:
             - name: Push Image To YC
               run: docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
-                
-            - name: Deploy Serverless Container
-              id: deploy-sls-container
-              uses: yc-actions/yc-sls-container-deploy@v2
-              with:
-                yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-                container-name: worddetector-test
-                folder-id: ${{ secrets.FOLDER_ID }}
-                revision-service-account-id: ${{ secrets.SERVICE_ACCOUNT_ID }}
-                revision-cores: 1
-                revision-memory: 512Mb
-                revision-core-fraction: 100
-                revision-concurrency: 8
-                revision-image-url: cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-                revision-execution-timeout: 10
+    deploy:
+        name: Deploy Serverless Container
+        runs-on: ubuntu-latest
+        steps:
+          - name: Deploy
+            uses: yc-actions/yc-sls-container-deploy@v2
+            with:
+              yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+              container-name: worddetector-test
+              folder-id: ${{ secrets.FOLDER_ID }}
+              revision-service-account-id: ${{ secrets.SERVICE_ACCOUNT_ID }}
+              revision-cores: 1
+              revision-memory: 512Mb
+              revision-core-fraction: 100
+              revision-concurrency: 8
+#              revision-image-url: cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+              revision-image-url: cr.yandex/crp5td2ej9d9m9e880v2/tesser:f258d2ad31a0992c70ab99358037ce6aa20ee445
+              revision-execution-timeout: 10
