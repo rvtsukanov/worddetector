@@ -38,9 +38,9 @@ jobs:
                   CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
                   CR_REPOSITORY: ${{ secrets.CR_REPOSITORY }}
                   IMAGE_TAG: latest
-              with:
-                yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-              run: docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+#              with:
+#                yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+              run: yc iam key create --service-account-name default-sa -o key.json && cat key.json | docker login --username json_key --password-stdin cr.yandex && docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
 
 #      - name: Deploy COI YC
